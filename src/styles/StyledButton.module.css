@@ -1,0 +1,41 @@
+/* app/components/StyledButton.module.css */
+.primary {
+    background-color: #0070f3;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+  
+  .primary:hover {
+    background-color: #005bb5;
+  }
+  
+  .secondary {
+    background-color: #e2e8f0;
+    color: #1a202c;
+    border: none;
+    border-radius: 5px;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+  }
+  
+  .secondary:hover {
+    background-color: #cbd5e0;
+  }
+  
+  .danger {
+    background-color: #e53e3e;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+  }
+  
+  .danger:hover {
+    background-color: #c53030;
+  }
+  
