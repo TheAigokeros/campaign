@@ -1,43 +1,44 @@
 'use client';
-import { ReactElement, useState } from 'react';
-import dynamic from 'next/dynamic';
-import { MERGE_TAGS } from '@/constants/mergeTags';
 
-const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
-import 'react-quill/dist/quill.snow.css';
+import { ReactElement, useEffect } from 'react';
+import { EditorContent, useEditor } from '@tiptap/react';
+import StarterKit from '@tiptap/starter-kit';
+import Placeholder from '@tiptap/extension-placeholder';
+// import Typography from '@flowbite/flowbite-typography';
 
 interface Props {
-  value: string;
-  setValue: (value: string) => void;
+  value?: string;
+  onChange?: (content: string) => void;
+  placeholder?: string;
 }
 
-export default function StyledRichTextEditor({ value, setValue }: Props): ReactElement {
-  const [showDropdown, setShowDropdown] = useState(false);
+export default function StyledRichTextEditor({
+  value = '',
+  onChange,
+  placeholder = 'Write your email content...',
+}: Props): ReactElement {
+  const editor = useEditor({
+    extensions: [
+      StarterKit,
+      Placeholder.configure({ placeholder }),
+      // Typography,
+    ],
+    content: value,
+    onUpdate({ editor }) {
+      onChange?.(editor.getHTML());
+    },
+    immediatelyRender: false,
+  });
 
-  const handleInsertTag = (tag: string) => {
-    setValue(`${value} <$${tag}>`);
-    setShowDropdown(false);
-  };
+  useEffect(() => {
+    if (editor && value !== editor.getHTML()) {
+      editor.commands.setContent(value, { emitUpdate: false });
+    }
+  }, [value, editor]);
 
   return (
-    <div className="relative">
-      <ReactQuill value={value} onChange={setValue} />
-      <button type="button" onClick={() => setShowDropdown(!showDropdown)}>
-        Insert Tag
-      </button>
-      {showDropdown && (
-        <div className="absolute border bg-white p-2 mt-1">
-          {MERGE_TAGS.map((tag) => (
-            <div
-              key={tag}
-              className="cursor-pointer hover:bg-gray-100 p-1"
-              onClick={() => handleInsertTag(tag)}
-            >
-              ::{tag}
-            </div>
-          ))}
-        </div>
-      )}
+    <div className="prose prose-sm sm:prose lg:prose-lg xl:prose-xl">
+      <EditorContent editor={editor} />
     </div>
-  );
+  )
 }

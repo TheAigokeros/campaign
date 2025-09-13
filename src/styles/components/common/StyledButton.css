@@ -1,0 +1,20 @@
+.button {	
+	background-color: red;
+	&.primary {
+		background-color: red;
+		border: 0.0625rem solid var(--greyColor200);
+		color: var(--greyColor50);
+
+		&:hover {
+			background-color: var(--primary1Color600);
+			border: 0.0625rem solid var(--greyColor200);
+			color: var(--greyColor50);
+		}
+
+		&:disabled {
+			background-color: var(--primary1Color200);
+			border: 0.0625rem solid var(--primary1Color200);
+			color: var(--greyColor50);
+		}
+	}
+}

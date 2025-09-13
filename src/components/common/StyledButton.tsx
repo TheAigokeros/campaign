@@ -1,26 +1,29 @@
-import { ReactElement } from 'react';
+import { ButtonHTMLAttributes, ReactElement } from 'react';
+// import styles from '@/styles/components/common/StyledButton.css'
+import clsx from 'clsx';
 
-interface Props {
+interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {
   children: React.ReactNode;
   buttonColor?: 'primary' | 'secondary' | 'tertiary';
-  size?: 'small' | 'medium' | 'large';
   fullWidth?: boolean;
-  onClick?: () => void;
+  appendClassName?: string;
 }
 
 export default function StyledButton({
   children,
   buttonColor = 'primary',
-  size = 'medium',
   fullWidth = true,
-  onClick,
+  appendClassName,
+  ...props
 }: Props): ReactElement {
-  return (
-    <button
-      onClick={onClick}
-      className={`btn ${buttonColor} ${size} ${fullWidth ? 'w-full' : ''}`}
-    >
-      {children}
-    </button>
-  );
+    // const buttonColorStyle = styles[buttonColor] || styles['primary'];    
+    return (
+        <button
+          className={clsx(buttonColor, appendClassName)}
+          
+          {...props}
+        >
+          {children}
+        </button>
+    );
 }

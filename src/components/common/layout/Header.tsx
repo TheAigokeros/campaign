@@ -1,5 +1,5 @@
-import { ReactElement, useCallback, useEffect, useMemo, useState } from 'react';
+import { ReactElement } from 'react';
 
 export default function Header(): ReactElement {
-    return (<div> <p>Header</p></div>);
+    return (<header> <p>test header</p></header>);
 }
