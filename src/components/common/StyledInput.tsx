@@ -4,6 +4,8 @@ import { ChangeEvent, ReactElement, KeyboardEvent } from 'react';
 interface Props {
   id?: string;
   value: string;
+  errorText?: string;
+  error?: boolean;
   setValue: (e: ChangeEvent<HTMLInputElement>) => void;  // I'm using form instead
   onChange?: (event: ChangeEvent<HTMLInputElement>) => void;
   onKeyDown?: (event: KeyboardEvent<HTMLInputElement>) => void;
@@ -19,6 +21,8 @@ export default function StyledInput({
   onChange,
   onKeyDown,
   placeholder = '',
+  errorText,
+  error,
   fullWidth = true,
   appendClassName,
 }: Props): ReactElement {
@@ -29,13 +33,15 @@ export default function StyledInput({
 	}
 
   return (
-    <input
-      id={id}
-      value={value}
-      onChange={handleInputChange}
-      placeholder={placeholder}
-      // className={`input ${fullWidth ? 'w-full' : ''}`}
-      className={clsx("input", appendClassName)}
-    />
+    <div>
+      <input
+        id={id}
+        value={value}
+        onChange={handleInputChange}
+        placeholder={placeholder}        
+        className={clsx("input", appendClassName)}
+      />
+      {error && (<label className="text-red-800 font-small text-xs"> {errorText} </label>)}      
+    </div>
   );
 }

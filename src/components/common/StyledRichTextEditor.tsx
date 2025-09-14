@@ -1,44 +1,72 @@
-'use client';
+import { useState, ChangeEvent, KeyboardEvent } from 'react';
+import { MERGE_TAGS } from '@/constants/mergeTags.constant';
 
-import { ReactElement, useEffect } from 'react';
-import { EditorContent, useEditor } from '@tiptap/react';
-import StarterKit from '@tiptap/starter-kit';
-import Placeholder from '@tiptap/extension-placeholder';
-// import Typography from '@flowbite/flowbite-typography';
+export default function MergeTagInput() {
+  const [value, setValue] = useState('');
+  const [tags, setTags] = useState<string[]>([]);
+  const [dropdownVisible, setDropdownVisible] = useState(false);
+  const [filter, setFilter] = useState('');
 
-interface Props {
-  value?: string;
-  onChange?: (content: string) => void;
-  placeholder?: string;
-}
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value;
+    setValue(val);
 
-export default function StyledRichTextEditor({
-  value = '',
-  onChange,
-  placeholder = 'Write your email content...',
-}: Props): ReactElement {
-  const editor = useEditor({
-    extensions: [
-      StarterKit,
-      Placeholder.configure({ placeholder }),
-      // Typography,
-    ],
-    content: value,
-    onUpdate({ editor }) {
-      onChange?.(editor.getHTML());
-    },
-    immediatelyRender: false,
-  });
-
-  useEffect(() => {
-    if (editor && value !== editor.getHTML()) {
-      editor.commands.setContent(value, { emitUpdate: false });
+    // detect "::" and show dropdown
+    const match = val.match(/::(\w*)$/);
+    if (match) {
+      setFilter(match[1].toUpperCase());
+      setDropdownVisible(true);
+    } else {
+      setDropdownVisible(false);
     }
-  }, [value, editor]);
+  };
+
+  const selectTag = (tag: string) => {
+    // replace "::filter" with the tag
+    const newValue = value.replace(/::\w*$/, `<$${tag}>`);
+    setValue(newValue);
+    setTags([...tags, tag]);
+    setDropdownVisible(false);
+  };
+
+  const removeTag = (tag: string) => {
+    setTags(tags.filter((t) => t !== tag));
+    setValue(value.replace(`<$${tag}>`, ''));
+  };
+
+  const filteredTags = MERGE_TAGS.filter((t) => t.includes(filter));
 
   return (
-    <div className="prose prose-sm sm:prose lg:prose-lg xl:prose-xl">
-      <EditorContent editor={editor} />
+    <div className="relative w-full">
+      <div className="flex flex-wrap gap-1 border p-2 rounded">
+        {tags.map((tag) => (
+          <span key={tag} className="bg-blue-100 text-blue-700 px-2 py-1 rounded-full flex items-center gap-1">
+            {tag}
+            <button onClick={() => removeTag(tag)}>×</button>
+          </span>
+        ))}
+
+        <input
+          value={value}
+          onChange={handleChange}
+          placeholder="Type :: to insert merge tag"
+          className="flex-1 outline-none"
+        />
+      </div>
+
+      {dropdownVisible && filteredTags.length > 0 && (
+        <ul className="absolute bg-white border mt-1 rounded shadow w-full z-10">
+          {filteredTags.map((tag) => (
+            <li
+              key={tag}
+              className="p-2 hover:bg-gray-200 cursor-pointer"
+              onClick={() => selectTag(tag)}
+            >
+              {tag}
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
-  )
+  );
 }

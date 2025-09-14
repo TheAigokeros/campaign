@@ -4,7 +4,8 @@
     "paths": {
       "@/styles/*": ["styles/*"],
       "@/components/*": ["components/*"],
-      "@/lib/*": ["lib/*"]
+      "@/lib/*": ["lib/*"],
+      "@/constants/*": ["constants/*"]
     },
     "target": "ES2017",
     "lib": [
