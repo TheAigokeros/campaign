@@ -47,8 +47,8 @@ export default function StyledRichTextEditorWithMergeTag({ value = '', onChange 
     editor
       .chain()
       .focus()
-      .deleteRange({ from: startPos, to: from }) // remove the '::CAMPAIGN'
-      .insertContent({ type: 'mergeTag', attrs: { tag } })
+      .deleteRange({ from: startPos, to: from }) // remove the ::TAG text
+      .insertContent({ type: 'mergeTag', attrs: { tag } }) // insert styled tag
       .run()
   
     setDropdownVisible(false)

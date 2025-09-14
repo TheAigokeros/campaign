@@ -1,5 +1,5 @@
 import { InspectOptions, inspect } from 'util';
-import { Node, mergeAttributes, Command } from '@tiptap/core'
+import { Node, mergeAttributes, Command, RawCommands } from '@tiptap/core'
 
 export function ins(data: any, options?: InspectOptions): string {
 	return inspect(data, { colors: true, compact: false, ...options });
@@ -9,30 +9,29 @@ export const MergeTag = Node.create({
   name: 'mergeTag',
   group: 'inline',
   inline: true,
-  atom: true, // treat as single unit
+  atom: true,
+  selectable: false,
   addAttributes() {
     return {
-      tag: {
-        default: '',
-      },
+      tag: { default: '' },
     };
   },
   parseHTML() {
-    return [
-      {
-        tag: 'span[data-merge-tag]',
-      },
-    ];
+    return [{ tag: 'span[data-merge-tag]' }];
   },
-  renderHTML({ HTMLAttributes }) {
+  renderHTML({ node, HTMLAttributes }) {
+    const tag = node.attrs.tag || '';
     return [
       'span',
       mergeAttributes(HTMLAttributes, {
-        'data-merge-tag': HTMLAttributes.tag,
+        'data-merge-tag': tag,
         class: 'bg-blue-100 text-blue-800 px-2 py-0.5 rounded-full',
       }),
-      `<$${HTMLAttributes.tag}>`, // this is what gets serialized
+      tag, // show only "CAMPAIGN" in editor
     ];
+  },
+  addProseMirrorPlugins() {
+    return [];
   },
 });
 
@@ -41,8 +40,9 @@ export const MergeTag = Node.create({
 // }
 
 export function editorBodyToBackend(html: string) {
+  // convert <span data-merge-tag="CAMPAIGN">CAMPAIGN</span> => <$CAMPAIGN>
   return html.replace(
-    /<span[^>]*data-merge-tag="(\w+)"[^>]*>.*?<\/span>/gi,
+    /<span[^>]*data-merge-tag="([^"]+)"[^>]*>.*?<\/span>/gi,
     (_, tag) => `<$${tag}>`
   );
 }
