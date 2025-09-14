@@ -6,7 +6,7 @@ interface Props {
   value: string;
   errorText?: string;
   error?: boolean;
-  setValue: (e: ChangeEvent<HTMLInputElement>) => void;  // I'm using form instead
+  setValue: (e: ChangeEvent<HTMLInputElement>) => void;
   onChange?: (event: ChangeEvent<HTMLInputElement>) => void;
   onKeyDown?: (event: KeyboardEvent<HTMLInputElement>) => void;
   placeholder?: string;
@@ -19,11 +19,10 @@ export default function StyledInput({
   value,
   setValue,
   onChange,
-  onKeyDown,
+  // onKeyDown,
   placeholder = '',
   errorText,
   error,
-  fullWidth = true,
   appendClassName,
 }: Props): ReactElement {
 

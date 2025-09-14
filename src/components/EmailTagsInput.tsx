@@ -45,8 +45,8 @@ export default function EmailTagsInput({
   // const displayError = errorText || error;
 
   return (
-    <div>
-      <div className="flex items-center gap-2 border rounded-lg p-2 bg-white">
+    <div className="flex-8">
+      <div className="flex items-center gap-2 w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-3 py-3 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow">
         <div className="flex flex-wrap items-center gap-2 flex-1">
           {emails.map((email) => (
             <span
@@ -86,7 +86,7 @@ export default function EmailTagsInput({
       </div>
       
       {error && (
-        <label className="text-red-800 text-sm">{error}</label>
+        <label className="text-red-800 text-sm absolute">{error}</label>
       )}
     </div>
   );

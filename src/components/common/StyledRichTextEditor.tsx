@@ -24,6 +24,7 @@ export default function StyledRichTextEditorWithMergeTag({ value = '', onChange 
 
     const selection = editor.state.selection;
     const textBefore = editor.state.doc.textBetween(0, selection.from, '\n');
+    console.log('text before  >> ' + textBefore)
     const match = textBefore.match(/::(\w*)$/);
     if (match) {
       setFilter(match[1].toUpperCase());
@@ -48,22 +49,37 @@ export default function StyledRichTextEditorWithMergeTag({ value = '', onChange 
       .chain()
       .focus()
       .deleteRange({ from: startPos, to: from }) // remove the ::TAG text
-      .insertContent({ type: 'mergeTag', attrs: { tag } }) // insert styled tag
+      .insertContent({ type: 'mergeTag', attrs: { tag } })
       .run()
   
     setDropdownVisible(false)
   }
 
   return (
-    <div className="relative">
+    <div className="relative my-5">
+       <button
+        type="button"
+        onClick={() => editor?.chain().focus().toggleBold().run()}
+        className={editor?.isActive('bold') ? 'font-bold text-blue-600' : ''}
+      >
+        Bold
+      </button>
+      <button
+        type="button"
+        onClick={() => editor?.chain().focus().toggleItalic().run()}
+        className={editor?.isActive('italic') ? 'italic text-blue-600' : ''}
+      >
+        Italic
+      </button>
+
       <EditorContent
         editor={editor}
         onKeyDown={handleKeyDown}
-        className="border p-2 rounded min-h-[150px]"
-      />
+        className="border p-2 rounded min-h-[150px] m-y-3"
+      />     
 
       {dropdownVisible && (
-        <ul className="absolute bg-white border mt-1 rounded shadow w-40 z-10">
+        <ul className="absolute bg-white border  rounded shadow w-40 z-10">
           {MERGE_TAGS.filter((t) => t.includes(filter)).map((tag) => (
             <li
               key={tag}

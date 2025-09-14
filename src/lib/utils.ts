@@ -27,7 +27,7 @@ export const MergeTag = Node.create({
         'data-merge-tag': tag,
         class: 'bg-blue-100 text-blue-800 px-2 py-0.5 rounded-full',
       }),
-      tag, // show only "CAMPAIGN" in editor
+      tag,
     ];
   },
   addProseMirrorPlugins() {
@@ -35,12 +35,8 @@ export const MergeTag = Node.create({
   },
 });
 
-// export function editorBodyToBackend(html: string) {
-//   return html.replace(/<span data-merge-tag="(\w+)">.*?<\/span>/g, '<$$1>');
-// }
 
 export function editorBodyToBackend(html: string) {
-  // convert <span data-merge-tag="CAMPAIGN">CAMPAIGN</span> => <$CAMPAIGN>
   return html.replace(
     /<span[^>]*data-merge-tag="([^"]+)"[^>]*>.*?<\/span>/gi,
     (_, tag) => `<$${tag}>`

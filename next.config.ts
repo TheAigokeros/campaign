@@ -5,6 +5,9 @@ const nextConfig: NextConfig = {
   sassOptions: {
     implementation: 'sass-embedded',
   },
+  images: {
+    domains: ["toppng.com"],
+  },
 }
  
 export default nextConfig

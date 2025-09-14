@@ -5,7 +5,7 @@ export default function CampaignPage() {
   return (
     <div className="flex min-h-screen">      
       <div className="flex-1 p-6">
-        <Header />
+        {/* <Header /> */}
         <CampaignForm />
       </div>
     </div>
