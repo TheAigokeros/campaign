@@ -11,6 +11,7 @@ import { SendCampaignEmailDTO } from 'common/module/campaign/campaign.dto';
 import { ChangeEvent, FormEvent, useState } from 'react';
 import { useInputField } from 'common/hooks';
 import EmailTagsInput from '../EmailTagsInput';
+import { editorBodyToBackend } from '@/lib/utils';
 
 
 export default function CampaignForm() {
@@ -62,7 +63,7 @@ export default function CampaignForm() {
         const payload: SendCampaignEmailDTO = {
           campaignName,
           subject,
-          body,
+          body: backendBody,
           emails: emails,
         };
         await sendCampaignEmail(payload)
@@ -93,9 +94,9 @@ export default function CampaignForm() {
         console.log(_errorText)
     }
   }
-	
 
 
+  const backendBody = editorBodyToBackend(body);
 
   return (
     <div>
@@ -123,7 +124,7 @@ export default function CampaignForm() {
         <StyledRichTextEditor
           value={body}
           onChange={setBody}
-          placeholder="Write your email content..."
+          // placeholder="Write your email content..."
         />
         {errorText.bodyError && <label className="text-red-800 text-sm">{errorText.bodyError}</label>}
 

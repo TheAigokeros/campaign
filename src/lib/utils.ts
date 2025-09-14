@@ -1,5 +1,5 @@
 import { InspectOptions, inspect } from 'util';
-import { Node, mergeAttributes } from '@tiptap/core';
+import { Node, mergeAttributes, Command } from '@tiptap/core'
 
 export function ins(data: any, options?: InspectOptions): string {
 	return inspect(data, { colors: true, compact: false, ...options });
@@ -9,10 +9,12 @@ export const MergeTag = Node.create({
   name: 'mergeTag',
   group: 'inline',
   inline: true,
-  atom: true,
+  atom: true, // treat as single unit
   addAttributes() {
     return {
-      tag: { default: '' },
+      tag: {
+        default: '',
+      },
     };
   },
   parseHTML() {
@@ -22,15 +24,25 @@ export const MergeTag = Node.create({
       },
     ];
   },
-  renderHTML({ node, HTMLAttributes }) {
+  renderHTML({ HTMLAttributes }) {
     return [
       'span',
       mergeAttributes(HTMLAttributes, {
-        'data-merge-tag': node.attrs.tag,
-        class:
-          'bg-blue-100 text-blue-700 px-2 py-1 rounded-full inline-flex items-center gap-1',
+        'data-merge-tag': HTMLAttributes.tag,
+        class: 'bg-blue-100 text-blue-800 px-2 py-0.5 rounded-full',
       }),
-      node.attrs.tag,
+      `<$${HTMLAttributes.tag}>`, // this is what gets serialized
     ];
   },
 });
+
+// export function editorBodyToBackend(html: string) {
+//   return html.replace(/<span data-merge-tag="(\w+)">.*?<\/span>/g, '<$$1>');
+// }
+
+export function editorBodyToBackend(html: string) {
+  return html.replace(
+    /<span[^>]*data-merge-tag="(\w+)"[^>]*>.*?<\/span>/gi,
+    (_, tag) => `<$${tag}>`
+  );
+}
